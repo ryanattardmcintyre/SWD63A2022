@@ -25,9 +25,17 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
-
-
-                    <a href=""></a>
+                </div>
+                <div class="justify-content-end">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span>@User.Identity.Name</span>
+                        <a href="/Home/Logout">Log out</a>
+                    }
+                    else
+                    {
+                        <a href="/Home/Login">Log in</a>
+                    }
                 </div>
             </div>
         </nav>
