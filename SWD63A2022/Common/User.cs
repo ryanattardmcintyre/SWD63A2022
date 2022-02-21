@@ -25,6 +25,9 @@ namespace Common
             get { return Name + " " + LastName; }
         }
 
+       
+        public List<Message> Messages { get; set; }
+
 
     }
 }

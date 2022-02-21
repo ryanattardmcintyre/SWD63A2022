@@ -8,8 +8,8 @@ namespace Common
     [FirestoreData]
     public class Message
     {
-        [FirestoreProperty]
-        public string DateSent { get; set; }
+        [FirestoreProperty, ServerTimestamp]
+        public Google.Cloud.Firestore.Timestamp DateSent { get; set; }
         [FirestoreProperty]
         public string Text { get; set; }
         [FirestoreProperty]

@@ -41,14 +41,28 @@ namespace DataAccess
            return await docRef.SetAsync(aNewUser);
         }
 
-        public void AddMessage(string email, Message msg)
+        public async Task<WriteResult> AddMessage(string email, Message msg)
         {
-
+            DocumentReference docRef = db.Collection("users").Document(email).Collection("messages").Document(msg.Id);
+            return await docRef.SetAsync(msg);
         }
 
         public List<Message> SearchMessages(string user, string keyword)
         {
             return null;
+        }
+
+        public async Task<List<Message>> ListMessages(string email)
+        {
+            //  CollectionReference colRef = db.Collection("users").Document(email).Collection("messages");
+            List<Message> messages = new List<Message>();
+            Query messagesQuery = db.Collection("users").Document(email).Collection("messages");
+            QuerySnapshot messagesSnapshot = await messagesQuery.GetSnapshotAsync();
+            foreach (DocumentSnapshot documentSnapshot in messagesSnapshot.Documents)
+            {
+                messages.Add(documentSnapshot.ConvertTo<Message>());
+            }
+            return messages;
         }
 
         public void UpdateUser(User updatedUser)

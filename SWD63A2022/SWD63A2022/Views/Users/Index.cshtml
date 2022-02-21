@@ -6,48 +6,56 @@
 
 <h1>Index</h1>
 
-<div>
-    <h4>User</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProfilePicUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProfilePicUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Mobile)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Mobile)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FullName)
-        </dd>
-    </dl>
-</div>
+<form method="post" action="/Users/register">
+
+    <div>
+        <h4>User</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-10">
+                <input type="text" value="@Model.Email" name="Email" readonly />
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+               <input type="text" value="@Model.Name" name="Name" />
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.LastName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProfilePicUrl)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProfilePicUrl)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Mobile)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Mobile)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FullName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.FullName)
+            </dd>
+        </dl>
+    </div>
+
+    <input type="submit" value="Update details" />
+
+</form>
+
+
 <div>
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     <a asp-action="Index">Back to List</a>
