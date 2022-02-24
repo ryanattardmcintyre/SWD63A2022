@@ -41,7 +41,7 @@ namespace SWD63A2022
                      .AddGoogle(options =>
                      {
                          options.ClientId = "27946963238-c8vcqm1ba5le30dlg2v80u8icml1bqnc.apps.googleusercontent.com";
-                         options.ClientSecret = "";
+                         options.ClientSecret = "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";
                      });
 
             services.AddRazorPages();

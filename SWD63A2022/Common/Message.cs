@@ -16,5 +16,8 @@ namespace Common
         public string Recipient { get; set; }
         [FirestoreProperty]
         public string Id { get; set; }
+
+        [FirestoreProperty]
+        public string AttachmentUri { get; set; }
     }
 }
