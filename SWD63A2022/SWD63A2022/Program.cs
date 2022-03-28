@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+ 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -20,6 +21,7 @@ namespace SWD63A2022
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                  //  webBuilder.UseGoogleDiagnostics("swd63a2022", "ClassDemo", "1");
                     webBuilder.UseStartup<Startup>();
                 });
     }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess;
+using Google.Cloud.Diagnostics.AspNetCore3;
+using Google.Cloud.Diagnostics.Common;
+using Google.Cloud.SecretManager.V1;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +14,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace SWD63A2022
 {
@@ -29,7 +33,45 @@ namespace SWD63A2022
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string projectId = Configuration["Project"];
+
+            //1. install Google.Cloud.Diagnostics.AspNetCore3 & Google.Cloud.Diagnostics.Common;
+
+            //2.
+            services.AddGoogleErrorReportingForAspNetCore(
+                new Google.Cloud.Diagnostics.Common.ErrorReportingServiceOptions
+            {
+                // Replace ProjectId with your Google Cloud Project ID.
+                ProjectId = projectId,
+                // Replace Service with a name or identifier for the service.
+                ServiceName = "ClassDemo",
+                // Replace Version with a version for the service.
+                Version = "1"
+            });
+
+            services.AddLogging(builder => builder.AddGoogle(new LoggingServiceOptions
+            {
+                // Replace ProjectId with your Google Cloud Project ID.
+                ProjectId = projectId,
+                // Replace Service with a name or identifier for the service.
+                ServiceName = "ClassDemo",
+                // Replace Version with a version for the service.
+                Version = "1"
+            }));
+
+
             services.AddControllersWithViews();
+
+            SecretManagerServiceClient client = SecretManagerServiceClient.Create();
+        
+            SecretVersionName secretVersionName = new SecretVersionName(projectId, "GoogleSecretKey", "1");
+
+            AccessSecretVersionResponse result = client.AccessSecretVersion(secretVersionName);
+
+            // Convert the payload to a string. Payloads are bytes by default.
+            String payload = result.Payload.Data.ToStringUtf8();
+
+
 
             services
                      .AddAuthentication(options =>
@@ -41,12 +83,12 @@ namespace SWD63A2022
                      .AddGoogle(options =>
                      {
                          options.ClientId = "27946963238-c8vcqm1ba5le30dlg2v80u8icml1bqnc.apps.googleusercontent.com";
-                         options.ClientSecret = "";
+                         options.ClientSecret = payload;
                      });
 
             services.AddRazorPages();
 
-            string projectId = Configuration["Project"];
+           
 
             services.AddScoped<FireStoreDataAccess>(
                 x => {
@@ -69,8 +111,10 @@ namespace SWD63A2022
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env )
         {
+            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

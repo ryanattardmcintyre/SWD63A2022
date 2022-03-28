@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Cloud.Diagnostics.AspNetCore3;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +15,29 @@ namespace SWD63A2022.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private IExceptionLogger _googleExceptionLogger;
+        public HomeController(ILogger<HomeController> logger, [FromServices] IExceptionLogger exceptionLogger 
+ )
         {
             _logger = logger;
+            _googleExceptionLogger = exceptionLogger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index( )
         {
+            _logger.LogInformation("Accessed index page");
+            try
+            {
+                //3.
+                throw new Exception("Test exception");
+
+                //4. before you run to test, make sure you enable error reporting api, by accessing the page
+                //  on console.cloud.google.com
+            }
+            catch (Exception ex)
+            {
+                _googleExceptionLogger.Log(ex);
+            }
             return View();
         }
 
