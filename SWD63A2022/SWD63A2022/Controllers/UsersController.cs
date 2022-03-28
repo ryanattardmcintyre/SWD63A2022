@@ -16,8 +16,10 @@ namespace SWD63A2022.Controllers
     public class UsersController : Controller
     {
         private readonly FireStoreDataAccess fireStore;
-        public UsersController(FireStoreDataAccess _fireStore)
+        private readonly PubsubAccess pubsub;
+        public UsersController(FireStoreDataAccess _fireStore, PubsubAccess _pubsub)
         {
+            pubsub = _pubsub;
             fireStore = _fireStore;
         }
 
@@ -88,11 +90,23 @@ namespace SWD63A2022.Controllers
 
                 //2. set msg.AttachmentUri to the uri to download it
 
-                msg.AttachmentUri = $"https://storage.googleapis.com/{bucketName}/{ msg.Id + Path.GetExtension(attachment.FileName)}";
+                //if bucket is uniform with public access: "https://storage.googleapis.com/{bucketName}/{filename}"
+                //if bucket is fine grained with dedicated acl on objects: "https://storage.cloud.google.com/{bucketName}/{filename}"
+
+
+                //msg.AttachmentUri = $"https://storage.googleapis.com/{bucketName}/{ msg.Id + Path.GetExtension(attachment.FileName)}";
+
+                msg.AttachmentUri = $"https://storage.cloud.google.com/{bucketName}/{ msg.Id + Path.GetExtension(attachment.FileName)}";
             }
 
            // msg.DateSent = Google.Cloud.Firestore.Timestamp.FromDateTime(DateTime.UtcNow);
             await fireStore.AddMessage(User.Claims.ElementAt(4).Value, msg);
+
+            
+            //adding the message info into the queue so later on, it can be sent via email
+            await pubsub.Publish(msg);
+
+
             return RedirectToAction("List");
         }
         [Authorize]
